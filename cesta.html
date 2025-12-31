@@ -204,19 +204,9 @@ function enviarSinFactura(){
   enviarWhatsApp(n,d);
 }
 
-async function enviarWhatsApp(nombre,direccion){
-  let msg = `📦 NUEVO PEDIDO%0ACliente: ${nombre}%0ADirección: ${direccion}%0A\n`;
-
-  for(let p of carrito){
-    try {
-      // Convertir imagen a base64
-      const imgData = await toBase64Image(p.img);
-      msg += `${p.n} - C$${p.p} x${p.cantidad||1}%0AImagen: ${imgData}%0A\n`;
-    } catch(e) {
-      console.log("Error cargando imagen:", e);
-      msg += `${p.n} - C$${p.p} x${p.cantidad||1}%0AImagen: No disponible\n`;
-    }
-  }
+function enviarWhatsApp(nombre,direccion){
+  let msg = `📦 NUEVO PEDIDO%0ACliente: ${nombre}%0ADirección: ${direccion}%0A`;
+  carrito.forEach(p => msg += `${p.n} - C$${p.p} x${p.cantidad||1}%0A`);
 
   showToast("✅ Pedido enviado a WhatsApp");
 
