@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Creaciones Mary</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+<style>
+body {
+  margin: 0;
+  font-family: Poppins;
+  background: #faf7f2;
+  color: #3d2b1f;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+/* Header */
+header {
+  display: none;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background: #3d2b1f;
+  color: white;
+  padding: 10px 15px;
+  z-index: 20;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,.2);
+}
+
+header h1 {
+  margin: 0;
+  font-size: 1.4rem;
+  cursor: pointer;
+  text-align: center;
+}
+
+header .menuBtn, header .cartBtn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 28px;
+  cursor: pointer;
+  transition: .3s;
+  padding: 8px 15px;
+  margin: 0 5px;
+}
+
+header .menuBtn:hover, header .cartBtn:hover {
+  color: #f5deb3;
+}
+
+/* Side Menu */
+#sideMenu {
+  position: fixed;
+  top: 0;
+  left: -100%;
+  width: 80%;
+  max-width: 300px;
+  height: 100%;
+  background: #3d2b1f;
+  color: white;
+  z-index: 30;
+  transition: 0.3s;
+  padding-top: 60px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+#sideMenu button {
+  background: none;
+  border: none;
+  color: white;
+  text-align: left;
+  padding: 12px 20px;
+  font-size: 18px;
+  cursor: pointer;
+  transition: .3s;
+}
+
+#sideMenu button:hover {
+  background: #5a3d2f;
+  border-radius: 10px;
+}
+
+#sideMenu .closeBtn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 25px;
+  cursor: pointer;
+}
+
+/* Hero */
+.hero {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background: linear-gradient(135deg,#d2b48c,#f5deb3);
+  padding: 20px;
+}
+
+.hero h1 {
+  font-size: clamp(1.8rem, 5vw, 2.8rem);
+  margin-bottom: 20px;
+}
+
+.hero p {
+  font-size: clamp(1rem, 3vw, 1.2rem);
+  margin-bottom: 30px;
+}
+
+.hero .btn {
+  background: #3d2b1f;
+  color: white;
+  border: none;
+  border-radius: 40px;
+  padding: clamp(12px, 2vw, 15px) clamp(25px, 5vw, 40px);
+  font-size: clamp(16px, 2.5vw, 18px);
+  cursor: pointer;
+  transition: .3s;
+  width: 80%;
+  max-width: 300px;
+}
+
+.hero .btn:hover {
+  background: #5a3d2f;
+  transform: scale(1.05);
+}
+
+/* Secciones */
+.section {
+  display: none;
+  padding: 120px 15px 50px;
+}
+
+.section h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  font-size: clamp(1.5rem, 4vw, 2rem);
+}
+.grid{
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+  padding:0 15px;
+}
+
+/* Grid categorías */
+.card{
+  display:flex;
+  align-items:center;
+  gap:15px;
+  background:white;
+  border-radius:20px;
+  box-shadow:0 10px 25px rgba(0,0,0,.12);
+  padding:15px;
+  cursor:pointer;
+  transition:.3s;
+}
+
+.card:hover{
+  transform:scale(1.01);
+}
+
+.card img{
+  width:110px;
+  height:110px;
+  object-fit:cover;
+  border-radius:15px;
+  margin:0;
+}
+
+.card h3{
+  margin:0;
+  font-size:1.2rem;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(0,0,0,.18);
+}
+
+.card img {
+  height: 120px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-bottom: 8px;
+  transition: .3s;
+}
+
+.card img:hover {
+  transform: scale(1.03);
+}
+
+.card h3 {
+  font-size: 1rem;
+  margin: 0;
+}
+
+/* Footer */
+footer {
+  display: none;
+  text-align: center;
+  color: #777;
+  padding: 20px;
+  font-size: 14px;
+}
+
+/* Toast */
+.toast-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.toast {
+  background: #3d2b1f;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0,0,0,.2);
+  opacity: 0;
+  transform: translateX(100%);
+  animation: slideIn 0.5s forwards, slideOut 0.5s forwards 3s;
+}
+
+@keyframes slideIn {
+  to { opacity:1; transform:translateX(0); }
+}
+
+@keyframes slideOut {
+  to { opacity:0; transform:translateX(100%); }
+}
+
+/* Responsive */
+@media(max-width:900px){
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media(max-width:500px){
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .hero h1 { font-size: 1.5rem; }
+  .hero p { font-size: 0.9rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- Hero -->
+<div class="hero" id="hero">
+<h1>Bienvenidos a Creaciones Mary</h1>
+<p>Artesanía Nicaragüense</p>
+<button class="btn" onclick="entrar()">VER CATEGORÍAS</button>
+</div>
+
+<!-- Header -->
+<header id="top">
+<button class="menuBtn" onclick="abrirMenu()">☰</button>
+<h1 onclick="ver('catalogo')">Creaciones Mary</h1>
+<button class="cartBtn" onclick="irCesta()">🛒</button>
+</header>
+
+<!-- Side Menu -->
+<div id="sideMenu">
+<span class="closeBtn" onclick="cerrarMenu()">×</span>
+<button onclick="ver('catalogo');cerrarMenu()">Categorías</button>
+<button onclick="abrirMapa();cerrarMenu()">Ubicación</button>
+<button onclick="ver('visitas');cerrarMenu()">Visitas</button>
+<button onclick="irCesta();cerrarMenu()">Cesta</button>
+</div>
+
+<!-- Secciones -->
+<section id="catalogo" class="section">
+<h2>Categorías</h2>
+<div class="grid" id="categorias"></div>
+</section>
+
+<section id="visitas" class="section">
+<h2>Visitas</h2>
+<h1 id="contador"></h1>
+</section>
+
+<!-- Modal mapa -->
+<div id="mapModal" onclick="this.style.display='none'" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.85); justify-content:center; align-items:center; z-index:100; padding:15px;">
+  <iframe 
+    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3879.907550171517!2d-86.58690902408533!3d13.479794086884318!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8f71dfd418c35cf1%3A0xd9c448e31dc9f1!2sMercado%20de%20Artesan%C3%ADas%20de%20Madriz!5e0!3m2!1ses!2sus!4v1767152558936!5m2!1ses!2sus" 
+    width="600" 
+    height="450" 
+    style="border:0; max-width:100%; max-height:100%;" 
+    allowfullscreen="" 
+    loading="lazy" 
+    referrerpolicy="no-referrer-when-downgrade">
+  </iframe>
+</div>
+
+<footer id="footer">© Creaciones Mary — Artesanía Nicaragüense</footer>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+// Categorías con enlace a su página
+let categorias = [
+  {id:1, n:'Llaveros', img:'3.jpeg', link:'llaveros.html'},
+  {id:2, n:'Porta lápices', img:'1.jpeg', link:'portalapices.html'},
+  {id:3, n:'Bolsos', img:'2.jpeg', link:'bolsos.html'},
+  {id:4, n:'Pulseras', img:'4.jpeg', link:'pulseras.html'},
+  {id:5, n:'Collares', img:'5.jpeg', link:'collares.html'}
+];
+
+// Entrar
+function entrar(){
+  document.getElementById('hero').style.display="none";
+  document.getElementById('top').style.display="flex";
+  document.getElementById('footer').style.display="block";
+  ver('catalogo'); cargarCategorias(); visitas();
+}
+
+// Mostrar sección
+function ver(id){
+  document.querySelectorAll('.section').forEach(s=>s.style.display="none");
+  document.getElementById(id).style.display="block";
+}
+
+// Cargar categorías
+function cargarCategorias(){
+  let c=document.getElementById('categorias'); 
+  c.innerHTML="";
+  categorias.forEach(cat=>{
+    c.innerHTML+=`
+    <div class="card" onclick="window.location.href='${cat.link}'">
+      <img src="${cat.img}">
+      <div>
+        <h3>${cat.n}</h3>
+        <p style="margin:5px 0 0;color:#777;font-size:14px;">
+          Ver productos disponibles
+        </p>
+      </div>
+    </div>`;
+  });
+}
+
+
+// Side Menu
+function abrirMenu(){document.getElementById('sideMenu').style.left='0'}
+function cerrarMenu(){document.getElementById('sideMenu').style.left='-100%'}
+
+// Visitas
+function visitas(){
+  let v = localStorage.getItem('vis') || 0; v++; localStorage.setItem('vis', v);
+  document.getElementById('contador').innerText = v;
+}
+
+// Ir a cesta.html
+function irCesta(){
+  window.location.href = "cesta.html";
+}
+
+// Modal mapa
+function abrirMapa(){document.getElementById('mapModal').style.display='flex'}
+</script>
+
+</body>
+</html>
