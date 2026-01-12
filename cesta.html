@@ -20,8 +20,10 @@ header h1{font-size:1.5rem;cursor:pointer;margin:0;}
 .cestaItem button{background:#3d2b1f;color:white;border:none;border-radius:10px;padding:6px 12px;cursor:pointer;transition:.3s;font-size:0.9rem}
 .cestaItem button:hover{background:#5a3d2f}
 #totalCesta{text-align:right;font-weight:bold;font-size:1.3rem;margin-top:10px;max-width:700px;margin-left:auto;margin-right:auto}
-#openModalBtn{display:block;margin:20px auto;background:#3d2b1f;color:white;padding:12px 25px;border:none;border-radius:50px;cursor:pointer;transition:0.3s;font-size:1rem}
-#openModalBtn:hover{background:#5a3d2f}
+button.mainBtn{display:inline-block;margin:10px 10px;padding:12px 25px;border:none;border-radius:50px;cursor:pointer;font-size:1rem;transition:.3s;color:white;background:#3d2b1f}
+button.mainBtn:hover{background:#5a3d2f}
+
+/* Modales */
 .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);justify-content:center;align-items:center;z-index:50;opacity:0;transition:opacity 0.3s ease}
 .modal.show{display:flex;opacity:1}
 .modal-content{background:white;padding:25px;border-radius:15px;max-width:400px;width:90%;text-align:center;position:relative;transform:translateY(-50px);transition:transform 0.3s ease}
@@ -31,9 +33,15 @@ header h1{font-size:1.5rem;cursor:pointer;margin:0;}
 .modal button{background:#3d2b1f;color:white;border:none;padding:12px;border-radius:50px;cursor:pointer;transition:.3s;font-size:1rem;margin-top:10px;width:100%}
 .modal button:hover{background:#5a3d2f}
 .modal-close{position:absolute;top:10px;right:15px;font-size:22px;cursor:pointer;color:#3d2b1f;font-weight:bold}
+
+/* Toast */
 .toast-container{position:fixed;top:20px;right:20px;z-index:999;display:flex;flex-direction:column;gap:10px}
 .toast{background:#3d2b1f;color:white;padding:12px 20px;border-radius:12px;box-shadow:0 5px 15px rgba(0,0,0,.2);opacity:0;transform:translateX(100%);animation:slideIn 0.5s forwards, slideOut 0.5s forwards 3s}
 @keyframes slideIn{to{opacity:1;transform:translateX(0)}}@keyframes slideOut{to{opacity:0;transform:translateX(100%)}} 
+
+/* Modal alerta bonita */
+#alertaFactura .modal-content{max-width:300px;}
+#alertaFactura button{width:100%;margin-top:15px;}
 @media(max-width:500px){.cestaItem{flex-direction:column;}.cestaItem img{margin-bottom:10px}#totalCesta{text-align:center}.toast-container{top:10px;right:10px}}
 </style>
 </head>
@@ -44,8 +52,11 @@ header h1{font-size:1.5rem;cursor:pointer;margin:0;}
 <div id="cestaList"></div>
 <div id="totalCesta"></div>
 
-<!-- Solo botón de enviar pedido -->
-<button id="openModalBtn" onclick="abrirModal()">Enviar pedido</button>
+<!-- Botones principales -->
+<div style="text-align:center;">
+  <button class="mainBtn" onclick="abrirModal()">Enviar pedido</button>
+  <button class="mainBtn" onclick="mostrarAlertaFactura()">Mostrar factura</button>
+</div>
 
 <!-- Modal de ingreso de datos -->
 <div id="pedidoModal" class="modal">
@@ -58,14 +69,12 @@ header h1{font-size:1.5rem;cursor:pointer;margin:0;}
   </div>
 </div>
 
-<!-- Modal de confirmación de factura -->
-<div id="facturaModal" class="modal">
+<!-- Modal alerta bonita antes de mostrar factura -->
+<div id="alertaFactura" class="modal">
   <div class="modal-content">
-    <h2>¿Deseas recibir la factura de tu pedido?</h2>
-    <div style="display:flex;justify-content:center;gap:20px;margin-top:25px;flex-wrap:wrap;">
-      <button onclick="enviarConFactura()" style="background:#3d2b1f;color:white;padding:12px 25px;border-radius:50px;border:none;cursor:pointer;font-size:1rem;">Sí, descargar factura</button>
-      <button onclick="enviarSinFactura()" style="background:#5a3d2f;color:white;padding:12px 25px;border-radius:50px;border:none;cursor:pointer;font-size:1rem;">No, solo enviar pedido</button>
-    </div>
+    <h2>📄 Atención</h2>
+    <p>Muestra esta factura a la persona que te atiende para facturar tu pedido</p>
+    <button onclick="generarFactura(false)">Aceptar</button>
   </div>
 </div>
 
@@ -101,8 +110,6 @@ function updateCantidad(index,value){ carrito[index].cantidad=parseInt(value); r
 function eliminar(index){ carrito.splice(index,1); renderCesta(); }
 
 const modal = document.getElementById('pedidoModal');
-const facturaModal = document.getElementById('facturaModal');
-
 function abrirModal(){ modal.classList.add('show'); }
 function cerrarModal(){ modal.classList.remove('show'); }
 
@@ -115,6 +122,12 @@ function showToast(message){
   setTimeout(()=>{ container.removeChild(toast); },4000);
 }
 
+// Modal alerta antes de generar factura
+const alertaFactura = document.getElementById('alertaFactura');
+function mostrarAlertaFactura(){ alertaFactura.classList.add('show'); }
+function cerrarAlertaFactura(){ alertaFactura.classList.remove('show'); }
+
+// Conversión de imagen a Base64
 async function toBase64Image(url){
   return new Promise((resolve,reject)=>{
     const img = new Image();
@@ -130,8 +143,11 @@ async function toBase64Image(url){
   });
 }
 
-async function generarFactura(){
+// Generar factura PDF
+async function generarFactura(mostrarAlerta){
+  cerrarAlertaFactura();
   if(carrito.length==0){ showToast("El carrito está vacío"); return; }
+
   const doc = new jsPDF();
   const fecha = new Date();
 
@@ -164,53 +180,34 @@ async function generarFactura(){
   doc.text(`Total: C$${total}`, 150, y+10);
 
   doc.save("Factura_CreacionesMary.pdf");
-  showToast("✅ Factura descargada automáticamente");
+  showToast("✅ Factura generada automáticamente");
 }
 
+// Confirmar envío de pedido
 async function confirmarPedido(){
   let n = document.getElementById('modalNombre').value.trim();
   let d = document.getElementById('modalDireccion').value.trim();
 
-  // Validación del nombre: solo letras y espacios, mínimo 3 caracteres
   if(!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]{3,}$/.test(n)){
     showToast("❌ Ingresa un nombre válido");
     return;
   }
-
-  // Validación de dirección: mínimo 5 caracteres
   if(d.length < 5){
     showToast("❌ Ingresa una dirección válida");
     return;
   }
 
   cerrarModal();
-  facturaModal.classList.add('show');
-  facturaModal.dataset.nombre = n;
-  facturaModal.dataset.direccion = d;
-}
-
-async function enviarConFactura(){
-  const n = facturaModal.dataset.nombre;
-  const d = facturaModal.dataset.direccion;
-  facturaModal.classList.remove('show');
-  await generarFactura();
   enviarWhatsApp(n,d);
 }
 
-function enviarSinFactura(){
-  const n = facturaModal.dataset.nombre;
-  const d = facturaModal.dataset.direccion;
-  facturaModal.classList.remove('show');
-  enviarWhatsApp(n,d);
-}
-
+// Enviar pedido por WhatsApp
 function enviarWhatsApp(nombre,direccion){
   let msg = `📦 NUEVO PEDIDO%0ACliente: ${nombre}%0ADirección: ${direccion}%0A`;
   carrito.forEach(p => msg += `${p.n} - C$${p.p} x${p.cantidad||1}%0A`);
 
   showToast("✅ Pedido enviado a WhatsApp");
 
-  // Vaciar carrito
   carrito = [];
   localStorage.setItem('car', JSON.stringify(carrito));
   renderCesta();
@@ -222,6 +219,5 @@ function enviarWhatsApp(nombre,direccion){
 
 renderCesta();
 </script>
-
 </body>
 </html>
