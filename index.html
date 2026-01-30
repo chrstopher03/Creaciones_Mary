@@ -9,7 +9,11 @@
 body {
   margin: 0;
   font-family: Poppins;
-  background: #faf7f2;
+  background-image: url('24.jpeg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
   color: #3d2b1f;
   overflow-x: hidden;
   scroll-behavior: smooth;
@@ -103,7 +107,12 @@ header .menuBtn:hover, header .cartBtn:hover {
   justify-content: center;
   align-items: center;
   text-align: center;
-  background: linear-gradient(135deg,#d2b48c,#f5deb3);
+
+  background-image: url('12.jpeg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
   padding: 20px;
 }
 
@@ -316,8 +325,8 @@ footer {
 <script>
 // Categorías con enlace a su página
 let categorias = [
-  {id:1, n:'Llaveros', img:'3.jpeg', link:'llaveros.html'},
-  {id:2, n:'Porta lápices', img:'1.jpeg', link:'portalapices.html'},
+  {id:1, n:'Bolsos', link:'llaveros.html'},
+  {id:2, n:'Magnetos', img:'1.jpeg', link:'magnetos.html'},
   {id:3, n:'Bolsos', img:'2.jpeg', link:'bolsos.html'},
   {id:4, n:'Pulseras', img:'4.jpeg', link:'pulseras.html'},
   {id:5, n:'Collares', img:'5.jpeg', link:'collares.html'}
@@ -339,12 +348,11 @@ function ver(id){
 
 // Cargar categorías
 function cargarCategorias(){
-  let c=document.getElementById('categorias'); 
+  let c=document.getElementById('categorias');
   c.innerHTML="";
   categorias.forEach(cat=>{
     c.innerHTML+=`
     <div class="card" onclick="window.location.href='${cat.link}'">
-      <img src="${cat.img}">
       <div>
         <h3>${cat.n}</h3>
         <p style="margin:5px 0 0;color:#777;font-size:14px;">
@@ -354,7 +362,6 @@ function cargarCategorias(){
     </div>`;
   });
 }
-
 
 // Side Menu
 function abrirMenu(){document.getElementById('sideMenu').style.left='0'}
